@@ -11,7 +11,7 @@ public class ProcessPaymentController {
 
     private final PaymentRepository paymentRepository;
 
-    public ProcessPaymentController(PaymentRepository paymentRepository, ProcessPaymentClient client) {
+    public ProcessPaymentController(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
     }
 
