@@ -27,5 +27,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             " <= :to)" +
             " group by p.processor " +
             "order by p.processor asc")
-    List<PaymentSummaryDTO> getPaymentSummaryBetween(Status status, Instant to, Instant from);
+    List<PaymentSummaryDTO> getPaymentSummaryBetween(Status status, Instant from, Instant to);
 }

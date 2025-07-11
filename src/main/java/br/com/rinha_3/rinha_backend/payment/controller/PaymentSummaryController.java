@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @RestController
 public class PaymentSummaryController {
-//GET /payments-summary?from=2020-07-10T12:34:56.000Z&to=2020-07-10T12:35:56.000Z
 
     private final PaymentRepository paymentRepository;
 
@@ -26,16 +26,12 @@ public class PaymentSummaryController {
     public PaymentSummaryResponse summary(@RequestParam(required = false) Instant from,
                                           @RequestParam(required = false) Instant to) {
 
-        if (to == null) {
-
+        if (from != null && to == null) {
             to = Instant.now();
-
         }
 
-        if (from == null) {
-
-            from = Instant.now();
-
+        else if (from == null && to != null) {
+            from = Instant.now().minus(1, ChronoUnit.DAYS);
         }
 
         var payments = paymentRepository.getPaymentSummaryBetween(Status.PAID, from, to);
