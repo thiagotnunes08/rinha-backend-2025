@@ -1,4 +1,5 @@
-package br.com.rinha_3.rinha_backend.payment;
+package br.com.rinha_3.rinha_backend.payment.request;
+import br.com.rinha_3.rinha_backend.payment.entity.Payment;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;

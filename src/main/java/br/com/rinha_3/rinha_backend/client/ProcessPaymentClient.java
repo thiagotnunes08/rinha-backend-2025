@@ -1,17 +1,36 @@
 package br.com.rinha_3.rinha_backend.client;
 
-import br.com.rinha_3.rinha_backend.payment.PaymentRequest;
+import br.com.rinha_3.rinha_backend.payment.entity.Payment;
+import br.com.rinha_3.rinha_backend.payment.entity.Processor;
+import br.com.rinha_3.rinha_backend.payment.entity.Status;
+import br.com.rinha_3.rinha_backend.payment.repository.PaymentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
 
 @Component
 public class ProcessPaymentClient {
 
-    private final RestClient client = RestClient.create();
+    private PaymentRepository paymentRepository;
 
-    public void send(PaymentRequest request) {
-         client.post()
-                .uri("https://api.externa/pagamentos")
-                .body(request);
+    public ProcessPaymentClient(PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
+    }
+
+    @Transactional
+    public void send(Payment payment) {
+
+         try {
+             System.out.println("usando o defalt");
+             payment.setProcessor(Processor.DEFAULT);
+             payment.updateStatus(Status.PAID);
+             paymentRepository.save(payment);
+         }
+
+         catch (Exception e) {
+             System.out.println("usando o fallback");
+             payment.setProcessor(Processor.FALL_BACK);
+             payment.updateStatus(Status.PAID);
+             paymentRepository.save(payment);
+         }
     }
 }
