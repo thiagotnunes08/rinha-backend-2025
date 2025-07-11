@@ -41,4 +41,16 @@ public class Payment {
     public void updateStatus(Status status) {
         this.status = status;
     }
+
+    public UUID getCorrelationId() {
+        return correlationId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public Instant getRequestedAt() {
+        return requestedAt;
+    }
 }
