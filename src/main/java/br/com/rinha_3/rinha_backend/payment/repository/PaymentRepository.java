@@ -19,7 +19,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
 
     @Query("select new br.com.rinha_3.rinha_backend.payment.dto.PaymentSummaryDTO" +
-            "(count(p),sum(p.amount)) " +
+            "(count(p),sum(p.amount),p.processor) " +
             "from Payment p " +
             "where p.status = :status " +
             "and (:from is null or p.requestedAt >= :from) " +

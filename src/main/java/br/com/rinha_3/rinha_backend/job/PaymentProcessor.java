@@ -26,7 +26,7 @@ public class PaymentProcessor {
     public void process() {
         var executor = Executors.newVirtualThreadPerTaskExecutor();
 
-        List<CompletableFuture<Void>> tarefas = paymentRepository
+        var tasks = paymentRepository
                 .findAllByStatus(Status.PENDING)
                 .stream()
                 .map(payment ->
@@ -36,6 +36,6 @@ public class PaymentProcessor {
                                                 .send(payment), executor))
                 .toList();
 
-        CompletableFuture.allOf(tarefas.toArray(new CompletableFuture[0])).join();
+        CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0])).join();
     }
 }

@@ -28,7 +28,7 @@ public class ProcessPaymentClient {
 
          catch (Exception e) {
              System.out.println("usando o fallback");
-             payment.setProcessor(Processor.FALL_BACK);
+             payment.setProcessor(Processor.FALLBACK);
              payment.updateStatus(Status.PAID);
              paymentRepository.save(payment);
          }
