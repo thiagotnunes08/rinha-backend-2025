@@ -30,7 +30,7 @@ public class ProcessPaymentClient {
 
         try {
 
-            var responseDefault = restClient
+            restClient
                     .post()
                     .uri("http://localhost:8001/payments")
                     .body(toJson(payment))
@@ -38,30 +38,26 @@ public class ProcessPaymentClient {
                     .retrieve()
                     .toBodilessEntity();
 
-            if (responseDefault.getStatusCode().is2xxSuccessful()) {
-                payment.updateStatus(Status.PAID);
-                payment.setProcessor(Processor.DEFAULT);
-            }
+            payment.updateStatus(Status.PAID);
+            payment.setProcessor(Processor.DEFAULT);
 
         } catch (Exception e) {
 
             try {
-                var responseFallback = restClient
+                restClient
                         .post()
                         .uri("http://localhost:8002/payments")
                         .body(toJson(payment))
                         .contentType(APPLICATION_JSON)
                         .retrieve().toBodilessEntity();
 
-                if (responseFallback.getStatusCode().is2xxSuccessful()) {
 
-                    payment.updateStatus(Status.PAID);
-                    payment.setProcessor(Processor.FALLBACK);
-                }
+                payment.updateStatus(Status.PAID);
+                payment.setProcessor(Processor.FALLBACK);
 
             } catch (Exception e2) {
 
-                System.out.println("deu ruim até no fallback! msg:"+e.getMessage()+"pagamento:"+payment.getCorrelationId());
+                System.out.println("deu ruim até no fallback! msg:" + e.getMessage() + "pagamento:" + payment.getCorrelationId());
             }
         }
     }
