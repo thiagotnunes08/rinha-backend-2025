@@ -6,7 +6,6 @@ import br.com.rinha_3.rinha_backend.payment.entity.Status;
 import br.com.rinha_3.rinha_backend.payment.repository.PaymentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -23,7 +22,6 @@ public class ProcessPaymentClient {
         this.objectMapper = objectMapper;
     }
 
-    @Transactional
     public void send(Payment payment) {
 
         var restClient = RestClient.create();
@@ -40,6 +38,7 @@ public class ProcessPaymentClient {
 
             payment.updateStatus(Status.PAID);
             payment.setProcessor(Processor.DEFAULT);
+            paymentRepository.save(payment);
 
         } catch (Exception e) {
 
@@ -54,6 +53,7 @@ public class ProcessPaymentClient {
 
                 payment.updateStatus(Status.PAID);
                 payment.setProcessor(Processor.FALLBACK);
+                paymentRepository.save(payment);
 
             } catch (Exception e2) {
 

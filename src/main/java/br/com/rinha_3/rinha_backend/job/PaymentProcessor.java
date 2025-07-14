@@ -1,12 +1,11 @@
 package br.com.rinha_3.rinha_backend.job;
 
 import br.com.rinha_3.rinha_backend.client.ProcessPaymentClient;
-import br.com.rinha_3.rinha_backend.payment.repository.PaymentRepository;
 import br.com.rinha_3.rinha_backend.payment.entity.Status;
+import br.com.rinha_3.rinha_backend.payment.repository.PaymentRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 
