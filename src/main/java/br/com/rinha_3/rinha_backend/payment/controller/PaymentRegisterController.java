@@ -2,6 +2,7 @@ package br.com.rinha_3.rinha_backend.payment.controller;
 
 import br.com.rinha_3.rinha_backend.payment.repository.PaymentRepository;
 import br.com.rinha_3.rinha_backend.payment.request.PaymentRequest;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class PaymentRegisterController {
     }
 
     @PostMapping("payments")
-    @Async
+    @Transactional
     public void process(@RequestBody @Valid PaymentRequest request) {
         var newPayment = request.toModel();
         paymentRepository.save(newPayment);

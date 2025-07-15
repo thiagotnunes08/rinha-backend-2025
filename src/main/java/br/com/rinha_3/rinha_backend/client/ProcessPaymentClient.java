@@ -6,6 +6,8 @@ import br.com.rinha_3.rinha_backend.payment.entity.Status;
 import br.com.rinha_3.rinha_backend.payment.repository.PaymentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -24,7 +26,7 @@ public class ProcessPaymentClient {
 
     public void send(Payment payment) {
 
-        var restClient = RestClient.create();
+        var restClient = RestClient.builder().requestFactory(getClientHttpRequestFactory()).build();
 
         try {
 
@@ -74,5 +76,12 @@ public class ProcessPaymentClient {
 
         }
         return null;
+    }
+
+    private ClientHttpRequestFactory getClientHttpRequestFactory() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(5000);
+        return factory;
     }
 }

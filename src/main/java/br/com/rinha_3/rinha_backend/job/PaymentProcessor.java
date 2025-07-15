@@ -21,7 +21,7 @@ public class PaymentProcessor {
         this.processPaymentClient = processPaymentClient;
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedRate = 5000)
     public void process() {
         var executor = Executors.newVirtualThreadPerTaskExecutor();
 
