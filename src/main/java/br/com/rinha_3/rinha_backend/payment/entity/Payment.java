@@ -53,4 +53,8 @@ public class Payment {
     public Instant getRequestedAt() {
         return requestedAt;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

@@ -6,6 +6,7 @@ import br.com.rinha_3.rinha_backend.payment.entity.Processor;
 import br.com.rinha_3.rinha_backend.payment.entity.Status;
 import br.com.rinha_3.rinha_backend.payment.repository.PaymentRepository;
 import br.com.rinha_3.rinha_backend.payment.response.PaymentSummaryResponse;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,14 +25,17 @@ public class PaymentSummaryController {
     }
 
     @GetMapping("payments-summary")
+    @Transactional(readOnly = true)
     public PaymentSummaryResponse summary(@RequestParam(required = false) Instant from,
                                           @RequestParam(required = false) Instant to) {
 
-        if (from != null && to == null) {
+        if (from == null && to == null) {
+            from = Instant.now().minus(1, ChronoUnit.HOURS);
             to = Instant.now();
-        }
-        else if (from == null && to != null) {
-            from = Instant.now().minus(1, ChronoUnit.DAYS);
+        } else if (from == null) {
+            from = Instant.now().minus(1, ChronoUnit.HOURS);
+        } else if (to == null) {
+            to = Instant.now();
         }
 
         var payments = paymentRepository.getPaymentSummaryBetween(Status.PAID, from, to);

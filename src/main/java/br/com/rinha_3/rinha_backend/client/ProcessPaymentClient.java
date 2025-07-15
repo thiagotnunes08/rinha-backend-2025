@@ -38,9 +38,8 @@ public class ProcessPaymentClient {
                     .retrieve()
                     .toBodilessEntity();
 
-            payment.updateStatus(Status.PAID);
-            payment.setProcessor(Processor.DEFAULT);
-            paymentRepository.save(payment);
+            paymentRepository.update(Status.PAID, Processor.DEFAULT, payment.getId());
+
 
         } catch (Exception e) {
 
@@ -52,14 +51,11 @@ public class ProcessPaymentClient {
                         .contentType(APPLICATION_JSON)
                         .retrieve().toBodilessEntity();
 
-
-                payment.updateStatus(Status.PAID);
-                payment.setProcessor(Processor.FALLBACK);
-                paymentRepository.save(payment);
+                paymentRepository.update(Status.PAID, Processor.FALLBACK, payment.getId());
 
             } catch (Exception e2) {
 
-                System.out.println("deu ruim até no fallback! msg:" + e.getMessage() + "pagamento:" + payment.getCorrelationId());
+                System.out.println("deu ruim até no fallback!");
             }
         }
     }
