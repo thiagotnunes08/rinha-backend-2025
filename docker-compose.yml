@@ -1,24 +1,79 @@
-version: "3.8"
 
 services:
-  db:
-    image: postgres:16
-    container_name: postgres-db
-    restart: always
+  rinha-postgres:
+    volumes:
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
+    image: postgres:latest
     environment:
+      POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
     networks:
-      - app-network
+      - rinha-network
+  #    deploy:
+  #      resources:
+  #        limits:
+  #          memory: "300MB"
+  #          cpus: "0.5"
 
-volumes:
-  pgdata:
+
+  api1:
+    image: thiagotnunes08/api-rinha-3:1.4
+    hostname: api1
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://rinha-postgres:5432/postgres
+    ports:
+      - "8080"
+    networks:
+      - rinha-network
+      - payment-processor
+    depends_on:
+      - rinha-postgres
+  #    deploy:
+  #      resources:
+  #        limits:
+  #          memory: "125MB"
+  #          cpus: "0.25"
+
+  api2:
+    image: thiagotnunes08/api-rinha-3:1.4
+    hostname: api2
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://rinha-postgres:5432/postgres
+    ports:
+      - "8080"
+    networks:
+      - rinha-network
+      - payment-processor
+    depends_on:
+      - rinha-postgres
+  #    deploy:
+  #      resources:
+  #        limits:
+  #          memory: "125MB"
+  #          cpus: "0.25"
+
+  nginx:
+    image: nginx:stable-alpine3.21-perl
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "9999:9999"
+    networks:
+      - rinha-network
+    depends_on:
+      - api1
+      - api2
+#    deploy:
+#      resources:
+#        limits:
+#          memory: "50MB"
+#          cpus: "0.25"
 
 networks:
-  app-network:
+  rinha-network:
     driver: bridge
+  payment-processor:
+    external: true

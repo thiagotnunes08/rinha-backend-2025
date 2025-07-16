@@ -32,7 +32,7 @@ public class ProcessPaymentClient {
 
             restClient
                     .post()
-                    .uri("http://localhost:8001/payments")
+                    .uri("http://payment-processor-default:8080/payments")
                     .body(toJson(payment))
                     .contentType(APPLICATION_JSON)
                     .retrieve()
@@ -46,7 +46,7 @@ public class ProcessPaymentClient {
             try {
                 restClient
                         .post()
-                        .uri("http://localhost:8002/payments")
+                        .uri("http://payment-processor-fallback:8080/payments")
                         .body(toJson(payment))
                         .contentType(APPLICATION_JSON)
                         .retrieve().toBodilessEntity();
@@ -55,7 +55,7 @@ public class ProcessPaymentClient {
 
             } catch (Exception e2) {
 
-                System.out.println("deu ruim até no fallback!");
+                System.out.println("deu ruim até no fallback!"+e2.getMessage());
             }
         }
     }

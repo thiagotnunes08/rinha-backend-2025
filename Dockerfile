@@ -1,4 +1,4 @@
-FROM eclipse-temurin:24-jdk-jammy
+FROM amazoncorretto:24.0.1-alpine3.21
 
 WORKDIR /app
 
@@ -8,9 +8,6 @@ ENV JAVA_OPTS="\
   -XX:+UseSerialGC \
   -Xms128m \
   -Xmx128m \
-  -XX:MaxMetaspaceSize=64m \
-  -XX:+TieredCompilation \
-  -XX:TieredStopAtLevel=1 \
 "
 
 EXPOSE 8080
